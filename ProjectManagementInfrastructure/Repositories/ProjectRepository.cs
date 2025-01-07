@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProjectManagementApplication.Abstractions;
 using ProjectManagementApplication.IRepository;
 using ProjectManagementCore.Entities;
 using ProjectManagementInfrastructure;
 
 namespace ProjectManagementApplication.Repositories
 {
-    public class ProjectRepository : IProjectRepository
+    public class ProjectRepository : IProjectRepository, IScopedLifestyle
     {
         private readonly ApplicationDbContext _dbContext;
         public ProjectRepository(ApplicationDbContext dbContext)
@@ -23,10 +24,10 @@ namespace ProjectManagementApplication.Repositories
             return await _dbContext.Projects.FirstOrDefaultAsync(p=>p.ProjectId==id);
         }
 
-        public Task AddProjectAsync(Project project)
+        public async Task<int> AddProjectAsync(Project project)
         {
             _dbContext.Projects.Add(project);
-            return _dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
 
         public Task UpdateProjectAsync(Project project)

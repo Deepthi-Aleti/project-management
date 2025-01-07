@@ -1,11 +1,14 @@
 ﻿using ProjectManagementApplication.Abstractions;
+using ProjectManagementApplication.DTO;
 using ProjectManagementApplication.IRepository;
 using ProjectManagementApplication.IService;
+using ProjectManagementApplication.Utils;
 using ProjectManagementCore.Entities;
+using ProjectManagementDomain.Enum;
 
 namespace ProjectManagementApplication.Service
 {
-    internal class ProjectService :IProjectService, IScopedLifestyle
+    public class ProjectService :IProjectService, IScopedLifestyle
     {
         private readonly IProjectRepository _projectRepository;
         public ProjectService(IProjectRepository projectRepository)
@@ -21,19 +24,30 @@ namespace ProjectManagementApplication.Service
             return await _projectRepository.GetProjectByIdAsync(id);
         }
 
-        public async Task AddProjectAsync(Project project)
+        public async Task AddProjectAsync(ProjectDetailsDto project)
         {
-            await _projectRepository.AddProjectAsync(project);
+            var newProject = project.MapToProjectEntity();
+            await _projectRepository.AddProjectAsync(newProject);
         }
 
-        public async Task UpdateProjectAsync(Project project)
+        public async Task<bool> UpdateProjectAsync(int id,ProjectDetailsDto projectDto)
         {
-            await _projectRepository.UpdateProjectAsync(project);
+            var projectEnitiy = await _projectRepository.GetProjectByIdAsync(id);
+            if(projectEnitiy == null)
+            {
+                return false;
+            }
+            projectEnitiy.UpdateProjectEntity(projectDto);
+
+            await _projectRepository.UpdateProjectAsync(projectEnitiy);
+            return true;
         }
 
-        
-
-
-        
+        public async Task<IEnumerable<ProjectDetailsDto>> GetProjectByCategoryAsync(ProjectCategory category)
+        {
+            var projects = (await _projectRepository.GetProjectsAsync()).Where(items => items.Category == category);
+            return projects.Select(item => item.MapToProjectDetailsDto());
+                            
+        }
     }
 }

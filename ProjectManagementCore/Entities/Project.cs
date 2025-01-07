@@ -1,6 +1,9 @@
 ﻿
 
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using ProjectManagementDomain.Entities;
+using ProjectManagementDomain.Enum;
 
 namespace ProjectManagementCore.Entities
 {
@@ -9,10 +12,12 @@ namespace ProjectManagementCore.Entities
         //public int Id { get; set; }
         //public string Name { get; set; }
         //public string Domain { get; set; }
-
+        [Key] 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProjectId { get; set; }
         public string Name { get; set; }
         public string Domain { get; set; }
+        public ProjectCategory Category { get; set; }
         public DateTime ReleaseDate { get; set; }
         public DateTime? TentativeDate { get; set; }
         public int TeamId {  get; set; }

@@ -1,4 +1,6 @@
-﻿using ProjectManagementCore.Entities;
+﻿using ProjectManagementApplication.DTO;
+using ProjectManagementCore.Entities;
+using ProjectManagementDomain.Enum;
 
 namespace ProjectManagementApplication.IService
 {
@@ -9,7 +11,9 @@ namespace ProjectManagementApplication.IService
 
         Task<IEnumerable<Project>> GetProjectsAsync();
         Task<Project> GetProjectByIdAsync(int id);
-        Task AddProjectAsync(Project project);
-        Task UpdateProjectAsync(Project project);
+
+        Task<IEnumerable<ProjectDetailsDto>> GetProjectByCategoryAsync(ProjectCategory category);
+        Task AddProjectAsync(ProjectDetailsDto project);
+        Task<bool> UpdateProjectAsync(int id, ProjectDetailsDto project);
     }
 }

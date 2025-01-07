@@ -13,7 +13,7 @@ namespace ProjectManagementInfrastructure
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseNpgsql("DefaultConnection");
+            optionsBuilder.UseNpgsql("Host=localhost;Username=postgres;Password=0x4fce110;Database=project_management_db;");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

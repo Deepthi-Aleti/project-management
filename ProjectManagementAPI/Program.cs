@@ -3,7 +3,12 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ProjectManagementApplication.Abstractions;
+using ProjectManagementApplication.IRepository;
+using ProjectManagementApplication.IService;
+using ProjectManagementApplication.Repositories;
+using ProjectManagementApplication.Service;
 using ProjectManagementInfrastructure;
+using ProjectManagementInfrastructure.Repositories;
 
 internal class Program
 {
@@ -14,16 +19,32 @@ internal class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
+        
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        //builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        //{
-        //    options.
-        //})
-        
-        RegisterScopedServices(builder.Services);
+        ConfigureServices(builder);
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigins", policy =>
+            {
+                policy.WithOrigins("http://localhost:3000") // Allowed origins
+                      .AllowAnyHeader() // Allow all headers
+                      .AllowAnyMethod(); // Allow all HTTP methods
+            });
+        });
+        builder.Services.AddScoped<IProjectService, ProjectService>();
+        builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+
+        builder.Services.AddScoped<IClientRepository, ClientRepository>();
+        builder.Services.AddScoped<IClientService, ClientService>();
+
+        builder.Services.AddScoped<ITeamRepository, TeamRepository>();
+        builder.Services.AddScoped<ITeamService, TeamService>();
+
+        //RegisterScopedServices(builder.Services);
         var app = builder.Build();
+            app.UseCors("AllowSpecificOrigins");
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -32,7 +53,7 @@ internal class Program
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
@@ -60,10 +81,10 @@ internal class Program
     {
         Configuration = configuration;
     }
-    public void ConfigureServices(IServiceCollection services)
+    public static void ConfigureServices(WebApplicationBuilder builder)
     {
         
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     }
 }

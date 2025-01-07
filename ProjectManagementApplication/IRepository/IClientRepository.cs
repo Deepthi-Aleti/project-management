@@ -9,7 +9,7 @@ namespace ProjectManagementApplication.IRepository
 {
     public interface IClientRepository
     {
-        Task<List<Clients>> GetAllClientsAsync();
-        Task<Clients> GetClientByIdAsync(int id);
+        public Task<IEnumerable<Clients>> GetAllClientsAsync();
+        public Task<Clients> GetClientByIdAsync(int id);
     }
 }

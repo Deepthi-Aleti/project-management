@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectManagementApplication.DTO;
 using ProjectManagementApplication.IService;
 using ProjectManagementCore.Entities;
+using ProjectManagementDomain.Enum;
 
 namespace ProjectManagementAPI.Controllers
 {
@@ -16,9 +18,9 @@ namespace ProjectManagementAPI.Controllers
             _projectService = projectService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetProjects()
+        public async Task<IActionResult> GetProjectsByCategoryAsync(ProjectCategory category)
         {
-            var projects= await _projectService.GetProjectsAsync();
+            var projects= await _projectService.GetProjectByCategoryAsync(category);
             return Ok(projects);
         }
 
@@ -35,20 +37,21 @@ namespace ProjectManagementAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject([FromBody] Project project)
+        public async Task<IActionResult> CreateProject([FromBody] ProjectDetailsDto project)
         {
             await _projectService.AddProjectAsync(project);
-            return CreatedAtAction(nameof(GetProjectById), new { id = project.ProjectId }, project);
+            return StatusCode(201);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProject(int id, [FromBody] Project project)
+        public async Task<IActionResult> UpdateProject(int id, [FromBody] ProjectDetailsDto project)
         {
-            if (id != project.ProjectId)
+
+            var isUpdateSuccess = await _projectService.UpdateProjectAsync(id, project);
+            if(!isUpdateSuccess)
             {
-                return BadRequest();
+                return NotFound($"Project with ID {id} not found.");
             }
-            await _projectService.UpdateProjectAsync(project);
             return NoContent();
         }
     }

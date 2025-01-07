@@ -11,7 +11,7 @@ namespace ProjectManagementApplication.IRepository
     {
         Task<IEnumerable<Project>> GetProjectsAsync();
         Task<Project> GetProjectByIdAsync(int id);
-        Task AddProjectAsync(Project project);
+        Task<int> AddProjectAsync(Project project);
         Task UpdateProjectAsync(Project project);
     }
 }

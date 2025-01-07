@@ -9,8 +9,7 @@ namespace ProjectManagementApplication.IRepository
 {
     public interface ITeamRepository
     {
-
-        Task<List<Teams>> GetAllTeamsAsync();
+        Task<IEnumerable<Teams>> GetAllTeamsAsync();
         Task<Teams> GetTeamByIdAsync(int id);
     }
 }
