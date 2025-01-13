@@ -1,7 +1,9 @@
 using System.Configuration;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Web;
 using ProjectManagementApplication.Abstractions;
 using ProjectManagementApplication.IRepository;
 using ProjectManagementApplication.IService;
@@ -19,7 +21,9 @@ internal class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
-        
+        builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -54,7 +58,7 @@ internal class Program
         }
 
         //app.UseHttpsRedirection();
-
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
