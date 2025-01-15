@@ -39,6 +39,12 @@ namespace ProjectManagementApplication.Repositories
             return _dbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteProjectAsync(Project project)
+        {
+            _dbContext.Projects.Remove(project);
+            await _dbContext.SaveChangesAsync();
+        }
+
 
 
         //public void AddProject(Project project)

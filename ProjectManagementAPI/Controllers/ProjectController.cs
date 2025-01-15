@@ -54,5 +54,16 @@ namespace ProjectManagementAPI.Controllers
             }
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProject(int id)
+        {
+            var isDeleted = await _projectService.DeleteProjectAsync(id);
+            if (!isDeleted)
+            {
+                return NotFound($"Project with ID {id} not found.");
+            }
+            return NoContent();
+        }
     }
 }

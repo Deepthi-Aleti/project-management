@@ -49,5 +49,17 @@ namespace ProjectManagementApplication.Service
             return projects.Select(item => item.MapToProjectDetailsDto());
                             
         }
+
+        public async Task<bool> DeleteProjectAsync(int id)
+        {
+            var projectEntity = await _projectRepository.GetProjectByIdAsync(id);
+            if (projectEntity == null)
+            {
+                return false;
+            }
+            await _projectRepository.DeleteProjectAsync(projectEntity);
+            return true;
+        }
+
     }
 }

@@ -15,5 +15,6 @@ namespace ProjectManagementApplication.IService
         Task<IEnumerable<ProjectDetailsDto>> GetProjectByCategoryAsync(ProjectCategory category);
         Task AddProjectAsync(ProjectDetailsDto project);
         Task<bool> UpdateProjectAsync(int id, ProjectDetailsDto project);
+        Task<bool> DeleteProjectAsync(int id);
     }
 }
