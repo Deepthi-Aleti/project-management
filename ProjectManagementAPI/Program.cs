@@ -11,6 +11,8 @@ using ProjectManagementApplication.Repositories;
 using ProjectManagementApplication.Service;
 using ProjectManagementInfrastructure;
 using ProjectManagementInfrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 internal class Program
 {
@@ -20,9 +22,12 @@ internal class Program
 
         // Add services to the container.
 
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+        builder.Services.AddAuthorization();
         builder.Services.AddControllers();
-        builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
