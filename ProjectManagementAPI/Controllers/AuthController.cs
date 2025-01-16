@@ -19,7 +19,7 @@ public class AuthController : ControllerBase
     {
         string tenantId = _configuration["AzureAd:TenantId"];
         string clientId = _configuration["AzureAd:ClientId"];
-        string clientSecret = _configuration["AzureAd:ClientSecret"];
+        string clientSecret = _configuration["AzureAd:Client_Secret"];
         string authority = $"{_configuration["AzureAd:Instance"]}{tenantId}";
 
         var app = ConfidentialClientApplicationBuilder.Create(clientId)
