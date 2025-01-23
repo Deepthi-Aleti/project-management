@@ -14,8 +14,12 @@ namespace ProjectManagementApplication.Utils
                 Name = project.Name,
                 Domain = project.Domain,
                 Category = project.Category,
-                TeamName = project.Teams.Name,
-                ClientName = project.Clients.Name,
+                TeamName = project.Teams?.Name ?? "Development Team-1",
+                ClientName = project.Clients?.Name ?? "Client A",
+                TeamId=project.TeamId,
+                ClientId=project.ClientId,
+                //TeamName = project.Teams.Name,
+                //ClientName = project.Clients.Name,
                 ReleaseDate = DateOnly.FromDateTime(project.ReleaseDate).ToShortDateString(),
             };
         }

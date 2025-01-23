@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectManagementApplication.Abstractions;
+using ProjectManagementApplication.DTO;
 using ProjectManagementApplication.IRepository;
 using ProjectManagementCore.Entities;
 using ProjectManagementInfrastructure;
@@ -14,10 +15,18 @@ namespace ProjectManagementApplication.Repositories
             _dbContext = dbContext;
         }
 
+        //public async Task<IEnumerable<Project>> GetProjectsAsync()
+        //{
+        //    return await _dbContext.Projects.Include(p => p.Teams).Include(p => p.Clients).ToListAsync();
+        //}
+
+       
+
         public async Task<IEnumerable<Project>> GetProjectsAsync()
         {
-            return await _dbContext.Projects.Include(p => p.Teams).Include(p => p.Clients).ToListAsync();
+            return await _dbContext.Projects.ToListAsync();
         }
+
 
         public async Task<Project> GetProjectByIdAsync(int id)
         {
@@ -45,6 +54,7 @@ namespace ProjectManagementApplication.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+       
 
 
         //public void AddProject(Project project)

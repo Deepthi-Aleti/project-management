@@ -24,6 +24,12 @@ namespace ProjectManagementAPI.Controllers
             return Ok(projects);
         }
 
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllProjectsAsync()
+        {
+            var projects = await _projectService.GetProjectsAsync();
+            return Ok(projects);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProjectById(int id)

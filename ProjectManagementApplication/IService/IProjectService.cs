@@ -9,7 +9,8 @@ namespace ProjectManagementApplication.IService
         //Task<IEnumerable<Project>> GetPojectDetails();
         //Task AddProject(Project project);
 
-        Task<IEnumerable<Project>> GetProjectsAsync();
+        Task<IEnumerable<ProjectDetailsDto>> GetProjectsAsync();
+        
         Task<Project> GetProjectByIdAsync(int id);
 
         Task<IEnumerable<ProjectDetailsDto>> GetProjectByCategoryAsync(ProjectCategory category);

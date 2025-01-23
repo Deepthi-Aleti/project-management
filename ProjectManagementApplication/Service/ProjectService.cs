@@ -11,14 +11,27 @@ namespace ProjectManagementApplication.Service
     public class ProjectService :IProjectService, IScopedLifestyle
     {
         private readonly IProjectRepository _projectRepository;
+        
+
         public ProjectService(IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
         }
-        public async Task<IEnumerable<Project>> GetProjectsAsync()
+        public async Task<IEnumerable<ProjectDetailsDto>> GetProjectsAsync()
         {
-            return await _projectRepository.GetProjectsAsync();
+            var projects = await _projectRepository.GetProjectsAsync();
+            return projects.Select(item => item.MapToProjectDetailsDto());
         }
+
+        //public async Task<List<ProjectDetailsDto>> GetProjectsAsync()
+        //{
+        //    var projects = await _projectRepository.GetProjectsAsync();
+        //    //return projects.Select(project => _mapper.Map<ProjectDetailsDto>(project)).ToList();
+        //    return projects.Select(item => item.MapToProjectDetailsDto());
+        //}
+
+
+
         public async Task<Project> GetProjectByIdAsync(int id)
         {
             return await _projectRepository.GetProjectByIdAsync(id);
