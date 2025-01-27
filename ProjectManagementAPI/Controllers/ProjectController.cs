@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementApplication.DTO;
 using ProjectManagementApplication.IService;
 using ProjectManagementCore.Entities;
@@ -12,7 +10,7 @@ namespace ProjectManagementAPI.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private readonly IProjectService _projectService;   
+        private readonly IProjectService _projectService;
         public ProjectController(IProjectService projectService)
         {
             _projectService = projectService;
@@ -20,7 +18,7 @@ namespace ProjectManagementAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProjectsByCategoryAsync(ProjectCategory category)
         {
-            var projects= await _projectService.GetProjectByCategoryAsync(category);
+            var projects = await _projectService.GetProjectByCategoryAsync(category);
             return Ok(projects);
         }
 
@@ -52,9 +50,8 @@ namespace ProjectManagementAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProject(int id, [FromBody] ProjectDetailsDto project)
         {
-
             var isUpdateSuccess = await _projectService.UpdateProjectAsync(id, project);
-            if(!isUpdateSuccess)
+            if (!isUpdateSuccess)
             {
                 return NotFound($"Project with ID {id} not found.");
             }

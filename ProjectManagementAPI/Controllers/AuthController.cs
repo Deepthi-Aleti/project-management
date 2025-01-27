@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using ProjectManagementApplication.DTO;
 using System.Threading.Tasks;
 
 [ApiController]
@@ -38,5 +39,26 @@ public class AuthController : ControllerBase
         {
             return Unauthorized(new { error = ex.Message });
         }
+    }
+
+    // User login using username and password
+    [HttpPost]
+    [Route("user")]
+    public async Task<IActionResult> UserAuthentication([FromBody] UserLoginDto userLogin)
+    {
+        if (IsValidUser(userLogin))
+        {
+            return Ok(new { message = "User Authenticated Successfully" });
+        }
+        else
+        {
+            return Unauthorized(new { error = "Invalid credentials" });
+        }
+    }
+
+    private bool IsValidUser(UserLoginDto userLogin)
+    {
+        var users = _configuration.GetSection("Users").Get<List<UserLoginDto>>();
+        return users?.Any(u => u.Username == userLogin.Username && u.Password == userLogin.Password) ?? false;
     }
 }
