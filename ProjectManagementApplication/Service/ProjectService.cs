@@ -20,10 +20,19 @@ namespace ProjectManagementApplication.Service
         public async Task<IEnumerable<ProjectDetailsDto>> GetProjectsAsync()
         {
             var projects = await _projectRepository.GetProjectsAsync();
-            return projects.Select(item => item.MapToProjectDetailsDto());
+            return projects.Select(item => item.DescriptionDto());
         }
 
-        public async Task<Project> GetProjectByIdAsync(int id)
+        //public async Task<List<ProjectDetailsDto>> GetProjectsAsync()
+        //{
+        //    var projects = await _projectRepository.GetProjectsAsync();
+        //    //return projects.Select(project => _mapper.Map<ProjectDetailsDto>(project)).ToList();
+        //    return projects.Select(item => item.MapToProjectDetailsDto());
+        //}
+
+
+
+        public async Task<ProjectDetailsDto> GetProjectByIdAsync(int id)
         {
             return await _projectRepository.GetProjectByIdAsync(id);
         }

@@ -17,6 +17,7 @@ namespace ProjectManagementInfrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("project_management")
                 .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -29,6 +30,9 @@ namespace ProjectManagementInfrastructure.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProjectId"));
+
+                    b.Property<int>("Category")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ClientId")
                         .HasColumnType("integer");
@@ -59,7 +63,8 @@ namespace ProjectManagementInfrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("timestamp with time zone");
@@ -76,57 +81,7 @@ namespace ProjectManagementInfrastructure.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Projects");
-
-                    b.HasData(
-                        new
-                        {
-                            ProjectId = 1,
-                            ClientId = 1,
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 620, DateTimeKind.Utc).AddTicks(7363),
-                            Domain = "Software Development",
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastUpdatedBy = "Admin",
-                            Name = "Project Zen",
-                            ReleaseDate = new DateTime(2025, 2, 28, 17, 10, 29, 619, DateTimeKind.Local).AddTicks(7249),
-                            TeamId = 1,
-                            TentativeDate = new DateTime(2025, 3, 28, 17, 10, 29, 620, DateTimeKind.Local).AddTicks(6263)
-                        },
-                        new
-                        {
-                            ProjectId = 2,
-                            ClientId = 2,
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 620, DateTimeKind.Utc).AddTicks(7873),
-                            Domain = "Marketing Campaign",
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastUpdatedBy = "Admin",
-                            Name = "Project Lamda",
-                            ReleaseDate = new DateTime(2025, 1, 28, 17, 10, 29, 620, DateTimeKind.Local).AddTicks(7866),
-                            TeamId = 2,
-                            TentativeDate = new DateTime(2025, 2, 28, 17, 10, 29, 620, DateTimeKind.Local).AddTicks(7870)
-                        },
-                        new
-                        {
-                            ProjectId = 3,
-                            ClientId = 3,
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 620, DateTimeKind.Utc).AddTicks(7877),
-                            Domain = "Product Design",
-                            IsActive = false,
-                            IsDeleted = false,
-                            LastUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastUpdatedBy = "Admin",
-                            Name = "Project CAT",
-                            ReleaseDate = new DateTime(2025, 4, 28, 17, 10, 29, 620, DateTimeKind.Local).AddTicks(7875),
-                            TeamId = 3,
-                            TentativeDate = new DateTime(2025, 5, 28, 17, 10, 29, 620, DateTimeKind.Local).AddTicks(7875)
-                        });
+                    b.ToTable("Projects", "project_management");
                 });
 
             modelBuilder.Entity("ProjectManagementDomain.Entities.Clients", b =>
@@ -174,48 +129,10 @@ namespace ProjectManagementInfrastructure.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.ToTable("Clients");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            ClientId = 1,
-                            Country = "USA",
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 619, DateTimeKind.Utc).AddTicks(5470),
-                            Email = "contact@abccorp.com",
-                            IsActive = true,
-                            IsDeleted = false,
-                            Location = "New York",
-                            Name = "ABC Corp",
-                            Phone = "123-456-7890"
-                        },
-                        new
-                        {
-                            ClientId = 2,
-                            Country = "UK",
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 619, DateTimeKind.Utc).AddTicks(6021),
-                            Email = "info@xyzltd.com",
-                            IsActive = true,
-                            IsDeleted = false,
-                            Location = "London",
-                            Name = "XYZ Pvt Ltd",
-                            Phone = "987-654-3210"
-                        },
-                        new
-                        {
-                            ClientId = 3,
-                            Country = "India",
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 619, DateTimeKind.Utc).AddTicks(6024),
-                            Email = "hello@techinnovators.in",
-                            IsActive = true,
-                            IsDeleted = false,
-                            Location = "Mumbai",
-                            Name = "Tech Innovators",
-                            Phone = "555-555-5555"
-                        });
+                    b.ToTable("Clients", "project_management");
                 });
 
             modelBuilder.Entity("ProjectManagementDomain.Entities.Teams", b =>
@@ -260,48 +177,7 @@ namespace ProjectManagementInfrastructure.Migrations
 
                     b.HasKey("TeamId");
 
-                    b.ToTable("Teams");
-
-                    b.HasData(
-                        new
-                        {
-                            TeamId = 1,
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 618, DateTimeKind.Utc).AddTicks(7489),
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastUpdatedBy = "Admin",
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Location = "Hyderabad",
-                            Name = "Development",
-                            Size = 10
-                        },
-                        new
-                        {
-                            TeamId = 2,
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 618, DateTimeKind.Utc).AddTicks(8009),
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastUpdatedBy = "Admin",
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Location = "Bangalore",
-                            Name = "Marketing",
-                            Size = 6
-                        },
-                        new
-                        {
-                            TeamId = 3,
-                            CreatedBy = "Admin",
-                            CreatedOn = new DateTime(2024, 12, 28, 11, 40, 29, 618, DateTimeKind.Utc).AddTicks(8012),
-                            IsActive = false,
-                            IsDeleted = false,
-                            LastUpdatedBy = "Admin",
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Location = "Chennai",
-                            Name = "Design",
-                            Size = 5
-                        });
+                    b.ToTable("Teams", "project_management");
                 });
 
             modelBuilder.Entity("ProjectManagementCore.Entities.Project", b =>
