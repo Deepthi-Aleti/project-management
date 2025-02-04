@@ -15,7 +15,5 @@ namespace ProjectManagementApplication.DTO
         public string ClientName { get; set; }
         public string ReleaseDate { get; set; }
 
-        public string description { get; set; }
-
     }
 }

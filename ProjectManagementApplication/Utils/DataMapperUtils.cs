@@ -21,27 +21,7 @@ namespace ProjectManagementApplication.Utils
                 ReleaseDate = DateOnly.FromDateTime(project.ReleaseDate).ToShortDateString(),
             };
         }
-
-        public static ProjectDetailsDto DescriptionDto(this Project project)
-        {
-            return new ProjectDetailsDto
-            {
-                Id = project.ProjectId,
-                Name = project.Name,
-                Domain = project.Domain,
-                Category = project.Category,
-                TeamName = project.Teams?.Name ?? "Development Team-1",
-                ClientName = project.Clients?.Name ?? "Client A",
-                TeamId = project.TeamId,
-                ClientId = project.ClientId,
-                //TeamName = project.Teams.Name,
-                //ClientName = project.Clients.Name,
-                ReleaseDate = DateOnly.FromDateTime(project.ReleaseDate).ToShortDateString(),
-                description = project.description,
-            };
-        }
-
-        public static TeamDetailsDto MapToTeamDetailsDto (this Teams team)
+        public static TeamDetailsDto MapToTeamDetailsDto(this Teams team)
         {
             return new TeamDetailsDto
             {
@@ -83,7 +63,6 @@ namespace ProjectManagementApplication.Utils
             projectEntity.Name = projectDetailsDto.Name;
             projectEntity.Category = projectDetailsDto.Category;
             projectEntity.Domain = projectDetailsDto.Domain;
-            projectEntity.ReleaseDate = projectEntity.ReleaseDate;
             projectEntity.TeamId = projectDetailsDto.TeamId;
             projectEntity.ClientId = projectDetailsDto.ClientId;
         }
