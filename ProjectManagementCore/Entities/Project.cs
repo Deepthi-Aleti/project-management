@@ -29,6 +29,8 @@ namespace ProjectManagementCore.Entities
         public string CreatedBy { get; set; }
         public string LastUpdatedBy { get; set; }
 
+        public string description { get; set; }
+
         public Clients Clients { get; set; }
         public Teams Teams { get; set; }
 
