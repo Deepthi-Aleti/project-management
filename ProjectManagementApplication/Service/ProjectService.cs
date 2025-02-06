@@ -34,7 +34,8 @@ namespace ProjectManagementApplication.Service
 
         public async Task<ProjectDetailsDto> GetProjectByIdAsync(int id)
         {
-            return await _projectRepository.GetProjectByIdAsync(id);
+            var projects= await _projectRepository.GetProjectByIdAsync(id);
+            return projects.DescriptionDto();
         }
 
         public async Task AddProjectAsync(ProjectDetailsDto project)
