@@ -19,6 +19,7 @@ namespace ProjectManagementApplication.Utils
                 TeamName = project.Teams?.Name, // Null-conditional operator
                 ClientName = project.Clients?.Name, // Null-conditional operator
                 ReleaseDate = DateOnly.FromDateTime(project.ReleaseDate).ToShortDateString(),
+                description = project.description,
             };
         }
 
@@ -75,6 +76,7 @@ namespace ProjectManagementApplication.Utils
                 CreatedOn = DateTime.UtcNow,
                 CreatedBy = "admin",
                 LastUpdatedBy = "admin",
+                description = projectDetailsDto.description
             };
         }
 
@@ -86,6 +88,7 @@ namespace ProjectManagementApplication.Utils
             projectEntity.ReleaseDate = projectEntity.ReleaseDate;
             projectEntity.TeamId = projectDetailsDto.TeamId;
             projectEntity.ClientId = projectDetailsDto.ClientId;
+            projectEntity.description = projectDetailsDto.description;
         }
     }
 }
