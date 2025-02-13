@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Bson" Version="3.1.0" />
+  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MongoDB.Driver" Version="3.1.0" />
+	</ItemGroup>
+
 </Project>

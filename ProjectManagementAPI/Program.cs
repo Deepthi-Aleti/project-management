@@ -1,47 +1,37 @@
-using System.Configuration;
-using System.Reflection;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
-using ProjectManagementApplication.Abstractions;
+using MongoDB.Driver;
 using ProjectManagementApplication.IRepository;
 using ProjectManagementApplication.IService;
 using ProjectManagementApplication.Repositories;
 using ProjectManagementApplication.Service;
-using ProjectManagementInfrastructure;
 using ProjectManagementInfrastructure.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-
+using System.Reflection;
+using System.Threading.Tasks;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
-
+        // Add authentication
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+            .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        ConfigureServices(builder);
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowSpecificOrigins", policy =>
-            {
-                policy.WithOrigins("http://localhost:3000") // Allowed origins
-                      .AllowAnyHeader() // Allow all headers
-                      .AllowAnyMethod(); // Allow all HTTP methods
-            });
-        });
+
+        var mongoSettings = builder.Configuration.GetSection("MongoDB");
+        var mongoClient = new MongoClient(mongoSettings["ConnectionString"]);
+        var mongoDatabase = mongoClient.GetDatabase(mongoSettings["DatabaseName"]);
+        builder.Services.AddSingleton<IMongoDatabase>(mongoDatabase);
+
+        // Register services
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 
@@ -51,49 +41,38 @@ internal class Program
         builder.Services.AddScoped<ITeamRepository, TeamRepository>();
         builder.Services.AddScoped<ITeamService, TeamService>();
 
-        //RegisterScopedServices(builder.Services);
-        var app = builder.Build();
-            app.UseCors("AllowSpecificOrigins");
+        builder.Services.AddScoped<MongoDbSeeder>();
 
-        // Configure the HTTP request pipeline.
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigins", policy =>
+            {
+                policy.WithOrigins("http://localhost:3000")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
+
+        var app = builder.Build();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var seeder = scope.ServiceProvider.GetRequiredService<MongoDbSeeder>();
+            await seeder.SeedAsync();
+        }
+
+        app.UseCors("AllowSpecificOrigins");
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
-        //app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
-
         app.MapControllers();
 
         app.Run();
-    }
-
-    private static void RegisterScopedServices(IServiceCollection serviceCollection)
-    {
-        var instances = Assembly
-            .GetExecutingAssembly()
-            .GetTypes()
-            .Where(t => t.IsClass && !t.IsAbstract && typeof(IScopedLifestyle).IsAssignableFrom(t));
-
-        foreach (var item in instances)
-        {
-            serviceCollection.AddScoped(item);
-        }
-
-    }
-    public IConfiguration Configuration { get; }
-
-    public Program(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-    public static void ConfigureServices(WebApplicationBuilder builder)
-    {
-        
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     }
 }

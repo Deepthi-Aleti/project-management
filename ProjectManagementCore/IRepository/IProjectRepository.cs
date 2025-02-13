@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProjectManagementApplication.DTO;
-using ProjectManagementCore.Entities;
+﻿using ProjectManagementCore.Entities;
 
 namespace ProjectManagementApplication.IRepository
 {
@@ -13,7 +7,7 @@ namespace ProjectManagementApplication.IRepository
         Task<IEnumerable<Project>> GetProjectsAsync();
         Task<Project> GetProjectByIdAsync(int id);
         Task<int> AddProjectAsync(Project project);
-        Task UpdateProjectAsync(Project project);
+        Task<bool> UpdateProjectAsync(Project project);
         Task DeleteProjectAsync(Project project);
 
     }

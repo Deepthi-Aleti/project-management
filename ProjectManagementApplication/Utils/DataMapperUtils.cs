@@ -16,27 +16,8 @@ namespace ProjectManagementApplication.Utils
                 Category = project.Category,
                 TeamId = project.TeamId,
                 ClientId = project.ClientId,
-                TeamName = project.Teams?.Name, // Null-conditional operator
-                ClientName = project.Clients?.Name, // Null-conditional operator
-                ReleaseDate = DateOnly.FromDateTime(project.ReleaseDate).ToShortDateString(),
-                description = project.description,
-            };
-        }
-
-        public static ProjectDetailsDto DescriptionDto(this Project project)
-        {
-            return new ProjectDetailsDto
-            {
-                Id = project.ProjectId,
-                Name = project.Name,
-                Domain = project.Domain,
-                Category = project.Category,
-                TeamName = project.Teams?.Name ?? "Development Team-1",
-                ClientName = project.Clients?.Name ?? "Client A",
-                TeamId = project.TeamId,
-                ClientId = project.ClientId,
-                //TeamName = project.Teams.Name,
-                //ClientName = project.Clients.Name,
+                TeamName = project.Teams?.Name,
+                ClientName = project.Clients?.Name,
                 ReleaseDate = DateOnly.FromDateTime(project.ReleaseDate).ToShortDateString(),
                 description = project.description,
             };
@@ -67,7 +48,7 @@ namespace ProjectManagementApplication.Utils
                 Name = projectDetailsDto.Name,
                 Category = projectDetailsDto.Category,
                 Domain = projectDetailsDto.Domain,
-                ReleaseDate = DateTime.Parse(projectDetailsDto.ReleaseDate).ToUniversalTime(),
+                ReleaseDate = DateTime.Parse(projectDetailsDto.ReleaseDate),
                 TeamId = projectDetailsDto.TeamId,
                 ClientId = projectDetailsDto.ClientId,
                 IsActive = true,
@@ -80,15 +61,16 @@ namespace ProjectManagementApplication.Utils
             };
         }
 
-        public static void UpdateProjectEntity(this Project projectEntity, ProjectDetailsDto projectDetailsDto)
+        public static Project UpdateProjectEntity(this Project project, ProjectDetailsDto dto)
         {
-            projectEntity.Name = projectDetailsDto.Name;
-            projectEntity.Category = projectDetailsDto.Category;
-            projectEntity.Domain = projectDetailsDto.Domain;
-            projectEntity.ReleaseDate = projectEntity.ReleaseDate;
-            projectEntity.TeamId = projectDetailsDto.TeamId;
-            projectEntity.ClientId = projectDetailsDto.ClientId;
-            projectEntity.description = projectDetailsDto.description;
+            project.Name = dto.Name;
+            project.Category = dto.Category;
+            project.Domain = dto.Domain;
+            project.ReleaseDate = DateTime.Parse(dto.ReleaseDate);
+            project.TeamId = dto.TeamId;
+            project.ClientId = dto.ClientId;
+            project.description = dto.description;
+            return project;
         }
     }
 }

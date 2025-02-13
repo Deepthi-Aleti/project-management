@@ -1,7 +1,7 @@
 ﻿
 
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using ProjectManagementDomain.Entities;
 using ProjectManagementDomain.Enum;
 
@@ -9,11 +9,9 @@ namespace ProjectManagementCore.Entities
 {
     public class Project
     {
-        //public int Id { get; set; }
-        //public string Name { get; set; }
-        //public string Domain { get; set; }
-        [Key] 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [BsonId] // Maps to MongoDB's _id field
+        [BsonRepresentation(BsonType.ObjectId)] // Allows MongoDB to handle the ObjectId as a string
+        public string Id { get; set; }
         public int ProjectId { get; set; }
         public string Name { get; set; }
         public string Domain { get; set; }
@@ -30,8 +28,9 @@ namespace ProjectManagementCore.Entities
         public string LastUpdatedBy { get; set; }
 
         public string? description { get; set; }
-
+        [BsonIgnore]
         public Clients Clients { get; set; }
+        [BsonIgnore]
         public Teams Teams { get; set; }
 
 

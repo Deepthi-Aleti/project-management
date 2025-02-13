@@ -7,9 +7,8 @@ using ProjectManagementDomain.Entities;
 
 namespace ProjectManagementApplication.IRepository
 {
-    public interface ITeamRepository
+    public interface IClientRepository
     {
-        Task<IEnumerable<Teams>> GetAllTeamsAsync();
-        Task<Teams> GetTeamByIdAsync(int id);
+        public Task<IEnumerable<Clients>> GetAllClientsAsync();
     }
 }

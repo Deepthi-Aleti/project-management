@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ProjectManagementDomain.Entities
 {
     public class Clients
     {
+        [BsonId] // Maps to MongoDB's _id field
+        [BsonRepresentation(BsonType.ObjectId)] // Allows MongoDB to handle the ObjectId as a string
+        public string Id { get; set; }
         public int ClientId { get; set; }
         public string Name { get; set; }
         public string Country { get; set; }

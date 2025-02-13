@@ -1,14 +1,12 @@
-﻿using ProjectManagementApplication.Abstractions;
-using ProjectManagementApplication.DTO;
+﻿using ProjectManagementApplication.DTO;
 using ProjectManagementApplication.IRepository;
 using ProjectManagementApplication.IService;
 using ProjectManagementApplication.Utils;
-using ProjectManagementCore.Entities;
 using ProjectManagementDomain.Enum;
 
 namespace ProjectManagementApplication.Service
 {
-    public class ProjectService : IProjectService, IScopedLifestyle
+    public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
 
@@ -20,22 +18,13 @@ namespace ProjectManagementApplication.Service
         public async Task<IEnumerable<ProjectDetailsDto>> GetProjectsAsync()
         {
             var projects = await _projectRepository.GetProjectsAsync();
-            return projects.Select(item => item.DescriptionDto());
+            return projects.Select(item => item.MapToProjectDetailsDto());
         }
-
-        //public async Task<List<ProjectDetailsDto>> GetProjectsAsync()
-        //{
-        //    var projects = await _projectRepository.GetProjectsAsync();
-        //    //return projects.Select(project => _mapper.Map<ProjectDetailsDto>(project)).ToList();
-        //    return projects.Select(item => item.MapToProjectDetailsDto());
-        //}
-
-
 
         public async Task<ProjectDetailsDto> GetProjectByIdAsync(int id)
         {
             var projects= await _projectRepository.GetProjectByIdAsync(id);
-            return projects.DescriptionDto();
+            return projects.MapToProjectDetailsDto();
         }
 
         public async Task AddProjectAsync(ProjectDetailsDto project)
@@ -52,11 +41,9 @@ namespace ProjectManagementApplication.Service
                 return false;
             }
 
-            projectEntity.UpdateProjectEntity(projectDto);
-            await _projectRepository.UpdateProjectAsync(projectEntity);
-            return true;
+            projectEntity = projectEntity.UpdateProjectEntity(projectDto);
+            return await _projectRepository.UpdateProjectAsync(projectEntity);
         }
-
         public async Task<IEnumerable<ProjectDetailsDto>> GetProjectByCategoryAsync(ProjectCategory category)
         {
             var projects = (await _projectRepository.GetProjectsAsync())
